@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KnijgoMenjava")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+47dcbfc386d1ba71f3b178cf44e46ded5eb21810")]
 [assembly: System.Reflection.AssemblyProductAttribute("KnijgoMenjava")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KnijgoMenjava")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

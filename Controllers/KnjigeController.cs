@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KnjigoMenjava.Data;
 using KnjigoMenjava.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 
 namespace KnijgoMenjava.Controllers
 {
+    
     public class KnjigeController : Controller
     {
         private readonly AppDbContext _context;
@@ -45,15 +45,18 @@ namespace KnijgoMenjava.Controllers
 
             return View(knjiga);
         }
+        [Authorize]
 
         // GET: Knjige/Create
         public IActionResult Create()
         {
-            ViewData["KategorijaId"] = new SelectList(_context.Kategorije, "Id", "Id");
-            ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["KategorijaId"] = new SelectList(_context.Kategorije.OrderBy(k => k.Ime), "Id", "Ime");
+            ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
+
+        [Authorize]
         // POST: Knjige/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -61,14 +64,16 @@ namespace KnijgoMenjava.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Naslov,Avtor,Opis,DatumDodajanja,KategorijaId,LastnikId")] Knjiga knjiga)
         {
+            
             if (ModelState.IsValid)
             {
                 _context.Add(knjiga);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["KategorijaId"] = new SelectList(_context.Kategorije, "Id", "Id", knjiga.KategorijaId);
-            ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "Id", knjiga.LastnikId);
+            ViewData["KategorijaId"] = new SelectList(_context.Kategorije.OrderBy(k => k.Ime), "Id", "Ime", knjiga.KategorijaId);
+            ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "UserName");
+
             return View(knjiga);
         }
 
@@ -85,11 +90,12 @@ namespace KnijgoMenjava.Controllers
             {
                 return NotFound();
             }
-            ViewData["KategorijaId"] = new SelectList(_context.Kategorije, "Id", "Id", knjiga.KategorijaId);
-            ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "Id", knjiga.LastnikId);
+            ViewData["KategorijaId"] = new SelectList(_context.Kategorije.OrderBy(k => k.Ime), "Id", "Ime", knjiga.KategorijaId);
+            ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "UserName");
             return View(knjiga);
         }
 
+        [Authorize]
         // POST: Knjige/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -122,11 +128,12 @@ namespace KnijgoMenjava.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["KategorijaId"] = new SelectList(_context.Kategorije, "Id", "Id", knjiga.KategorijaId);
-            ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "Id", knjiga.LastnikId);
+            ViewData["KategorijaId"] = new SelectList(_context.Kategorije.OrderBy(k => k.Ime), "Id", "Ime", knjiga.KategorijaId);
+            ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "UserName");
             return View(knjiga);
         }
 
+        [Authorize(Roles = "Administrator")]
         // GET: Knjige/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -147,6 +154,7 @@ namespace KnijgoMenjava.Controllers
             return View(knjiga);
         }
 
+        [Authorize(Roles = "Administrator")]
         // POST: Knjige/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 namespace KnjigoMenjava.Models;
 
 public class Knjiga
@@ -10,11 +11,12 @@ public class Knjiga
 
     public DateTime DatumDodajanja { get; set; }
 
-    // povezava do kategorije
-    public int KategorijaId { get; set; }
-    public Kategorija Kategorija { get; set; }
 
-    // kdo je lastnik knjige
+    [Display(Name = "Kategorija")]
+    public int KategorijaId { get; set; }
+    public Kategorija? Kategorija { get; set; }
+
+    [Display(Name = "Lastnik")]
     public string LastnikId { get; set; }
-    public Uporabnik Lastnik { get; set; }
+    public Uporabnik? Lastnik { get; set; }
 }
