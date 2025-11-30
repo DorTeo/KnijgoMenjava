@@ -4,7 +4,7 @@ public class Ocena
 {
     public int Id { get; set; }
 
-    public int Zvezdice { get; set; }   
+    public int Zvezdice { get; set; } 
     public string? Komentar { get; set; }
 
 

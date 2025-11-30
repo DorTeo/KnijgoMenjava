@@ -1,28 +1,28 @@
-@model IEnumerable<KnjigoMenjava.Models.Ocena>
+@model PaginatedList<KnjigoMenjava.Models.Ocena>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Ocene</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" asp-route-knjigaId="@Context.Request.Query["knjigaId"]">Dodaj novo oceno</a>
+</p>
+<p>
+    <a asp-controller="Knjige" asp-action="Index">Nazaj na seznam knjig</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Zvezdice)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["ZvezdiceSortParm"]" asp-route-knjigaId="@Context.Request.Query["knjigaId"]">Zvezdice</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Komentar)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Komentar)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Knjiga)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Uporabnik)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Uporabnik.UserName)
             </th>
             <th></th>
         </tr>
@@ -37,17 +37,34 @@
                 @Html.DisplayFor(modelItem => item.Komentar)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Knjiga.Id)
+                @Html.DisplayFor(modelItem => item.Uporabnik.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Uporabnik.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Uredi</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Podrobnosti</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Izbrisi</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-knjigaId="@Context.Request.Query["knjigaId"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-knjigaId="@Context.Request.Query["knjigaId"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

@@ -20,10 +20,52 @@ namespace KnijgoMenjava.Controllers
         }
 
         // GET: Knjige
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
-            var appDbContext = _context.Knjige.Include(k => k.Kategorija).Include(k => k.Lastnik);
-            return View(await appDbContext.ToListAsync());
+
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = searchString;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var appDbContext = _context.Knjige
+                .Include(k => k.Kategorija)
+                .Include(k => k.Lastnik)
+                .Where(k => !_context.Rezervacije.Any(r => r.KnjigaId == k.Id && r.DatumVrnitve == null));
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                appDbContext = appDbContext.Where(k => k.Naslov.Contains(searchString) || k.Avtor.Contains(searchString) || k.Lastnik.UserName.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    appDbContext = appDbContext.OrderByDescending(k => k.Naslov);
+                    break;
+                case "Date":
+                    appDbContext = appDbContext.OrderBy(k => k.DatumDodajanja);
+                    break;
+                case "date_desc":
+                    appDbContext = appDbContext.OrderByDescending(k => k.DatumDodajanja);
+                    break;
+                default:
+                    appDbContext = appDbContext.OrderBy(k => k.Naslov);
+                    break;
+            }
+
+            int pageSize = 10;    
+            return View(await PaginatedList<Knjiga>.CreateAsync(appDbContext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Knjige/Details/5
@@ -51,7 +93,6 @@ namespace KnijgoMenjava.Controllers
         public IActionResult Create()
         {
             ViewData["KategorijaId"] = new SelectList(_context.Kategorije.OrderBy(k => k.Ime), "Id", "Ime");
-            ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
@@ -62,9 +103,18 @@ namespace KnijgoMenjava.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Naslov,Avtor,Opis,DatumDodajanja,KategorijaId,LastnikId")] Knjiga knjiga)
+        public async Task<IActionResult> Create([Bind("Id,Naslov,Avtor,Opis,KategorijaId")] Knjiga knjiga)
         {
             
+            knjiga.LastnikId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            
+           
+            knjiga.DatumDodajanja = DateTime.Now;
+
+           
+            ModelState.Remove("LastnikId");
+            ModelState.Remove("DatumDodajanja");
+
             if (ModelState.IsValid)
             {
                 _context.Add(knjiga);
@@ -72,14 +122,16 @@ namespace KnijgoMenjava.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["KategorijaId"] = new SelectList(_context.Kategorije.OrderBy(k => k.Ime), "Id", "Ime", knjiga.KategorijaId);
-            ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "UserName");
-
             return View(knjiga);
         }
 
+        [Authorize]
         // GET: Knjige/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (id == null)
             {
                 return NotFound();
@@ -90,6 +142,8 @@ namespace KnijgoMenjava.Controllers
             {
                 return NotFound();
             }
+
+            if (!string.IsNullOrEmpty(currentUserId) && knjiga.LastnikId != currentUserId && !User.IsInRole("Administrator")) return Forbid();
             ViewData["KategorijaId"] = new SelectList(_context.Kategorije.OrderBy(k => k.Ime), "Id", "Ime", knjiga.KategorijaId);
             ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "UserName");
             return View(knjiga);
@@ -107,6 +161,8 @@ namespace KnijgoMenjava.Controllers
             {
                 return NotFound();
             }
+
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (ModelState.IsValid)
             {
@@ -128,12 +184,14 @@ namespace KnijgoMenjava.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            if (!string.IsNullOrEmpty(currentUserId) && knjiga.LastnikId != currentUserId && !User.IsInRole("Administrator")) return Forbid();
             ViewData["KategorijaId"] = new SelectList(_context.Kategorije.OrderBy(k => k.Ime), "Id", "Ime", knjiga.KategorijaId);
             ViewData["LastnikId"] = new SelectList(_context.Users, "Id", "UserName");
             return View(knjiga);
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize]
         // GET: Knjige/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -142,10 +200,18 @@ namespace KnijgoMenjava.Controllers
                 return NotFound();
             }
 
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var knjiga = await _context.Knjige
                 .Include(k => k.Kategorija)
                 .Include(k => k.Lastnik)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (knjiga != null)
+            {
+                if (!string.IsNullOrEmpty(currentUserId) && knjiga.LastnikId != currentUserId && !User.IsInRole("Administrator")) return Forbid();    
+            }
+
             if (knjiga == null)
             {
                 return NotFound();
@@ -154,7 +220,7 @@ namespace KnijgoMenjava.Controllers
             return View(knjiga);
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize]
         // POST: Knjige/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -166,6 +232,9 @@ namespace KnijgoMenjava.Controllers
                 _context.Knjige.Remove(knjiga);
             }
 
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (knjiga != null && !string.IsNullOrEmpty(currentUserId) && knjiga.LastnikId != currentUserId && !User.IsInRole("Administrator")) return Forbid();
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -174,5 +243,35 @@ namespace KnijgoMenjava.Controllers
         {
             return _context.Knjige.Any(e => e.Id == id);
         }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Rezerviraj(int id)
+        {
+            var knjiga = await _context.Knjige.FindAsync(id);
+            if (knjiga == null)
+            {
+                return NotFound();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            if (string.IsNullOrEmpty(userId)) return Forbid();
+
+            var rezervacija = new Rezervacija
+            {
+                KnjigaId = id,
+                UporabnikId = userId!,
+                DatumRezervacije = DateTime.Now
+            };
+            _context.Add(rezervacija);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
+
+
+
+

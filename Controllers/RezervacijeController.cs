@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KnjigoMenjava.Data;
 using KnjigoMenjava.Models;
+using System.Security.Claims;
 
 namespace KnijgoMenjava.Controllers
 {
@@ -20,10 +17,54 @@ namespace KnijgoMenjava.Controllers
         }
 
         // GET: Rezervacije
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            var appDbContext = _context.Rezervacije.Include(r => r.Knjiga).Include(r => r.Uporabnik);
-            return View(await appDbContext.ToListAsync());
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            IQueryable<Rezervacija> AppDBcontext = _context.Rezervacije
+                .Include(r => r.Knjiga)
+                    .ThenInclude(k => k.Lastnik)
+                .Include(r => r.Uporabnik)
+                .Where(r => r.UporabnikId == userId || r.Knjiga.LastnikId == userId);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                AppDBcontext = AppDBcontext.Where(r => r.Knjiga.Naslov.Contains(searchString) || r.Uporabnik.UserName.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    AppDBcontext = AppDBcontext.OrderByDescending(r => r.Knjiga.Naslov);
+                    break;
+                case "Date":
+                    AppDBcontext = AppDBcontext.OrderBy(r => r.DatumRezervacije);
+                    break;
+                case "date_desc":
+                    AppDBcontext = AppDBcontext.OrderByDescending(r => r.DatumRezervacije);
+                    break;
+                default:
+                    AppDBcontext = AppDBcontext.OrderBy(r => r.Knjiga.Naslov);
+                    break;
+            }
+
+            int pageSize = 10;    
+            return View(await PaginatedList<Rezervacija>.CreateAsync(AppDBcontext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Rezervacije/Details/5
@@ -101,6 +142,10 @@ namespace KnijgoMenjava.Controllers
             {
                 return NotFound();
             }
+
+            // Remove validation for navigation properties that are not bound
+            ModelState.Remove("Knjiga");
+            ModelState.Remove("Uporabnik");
 
             if (ModelState.IsValid)
             {

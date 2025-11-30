@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KnjigoMenjava.Data;
 using KnjigoMenjava.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace KnijgoMenjava.Controllers
 {
@@ -20,10 +18,30 @@ namespace KnijgoMenjava.Controllers
         }
 
         // GET: Ocene
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, int? knjigaId, int? pageNumber)
         {
-            var appDbContext = _context.Ocene.Include(o => o.Knjiga).Include(o => o.Uporabnik);
-            return View(await appDbContext.ToListAsync());
+            ViewData["ZvezdiceSortParm"] = String.IsNullOrEmpty(sortOrder) ? "ZvezdiceSortParm_desc" : "";
+            ViewData["CurrentSort"] = sortOrder;
+
+            IQueryable<Ocena> appDbContext = _context.Ocene.Include(o => o.Knjiga).Include(o => o.Uporabnik);
+            
+            if (knjigaId != null)
+            {
+                appDbContext = appDbContext.Where(o => o.KnjigaId == knjigaId);
+            }
+
+            switch (sortOrder)
+            {
+                case "ZvezdiceSortParm_desc":
+                    appDbContext = appDbContext.OrderByDescending(o => o.Zvezdice);
+                    break;
+                default:
+                    appDbContext = appDbContext.OrderBy(o => o.Zvezdice);
+                    break;
+            }
+            
+            int pageSize = 5;
+            return View(await PaginatedList<Ocena>.CreateAsync(appDbContext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Ocene/Details/5
@@ -47,32 +65,41 @@ namespace KnijgoMenjava.Controllers
         }
 
         // GET: Ocene/Create
-        public IActionResult Create()
+        [Authorize]
+        public async Task<IActionResult> Create(int? knjigaId)
         {
-            ViewData["KnjigaId"] = new SelectList(_context.Knjige, "Id", "Id");
-            ViewData["UporabnikId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            return View(new Ocena { KnjigaId = knjigaId.Value });
         }
 
         // POST: Ocene/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Zvezdice,Komentar,KnjigaId,UporabnikId")] Ocena ocena)
+        public async Task<IActionResult> Create([Bind("Id,Zvezdice,Komentar,KnjigaId")] Ocena ocena)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ocena.UporabnikId = userId;
+
+
+            ModelState.Remove("Uporabnik");
+            ModelState.Remove("UporabnikId");
+            ModelState.Remove("Knjiga");
+
             if (ModelState.IsValid)
             {
                 _context.Add(ocena);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { knjigaId = ocena.KnjigaId });
             }
-            ViewData["KnjigaId"] = new SelectList(_context.Knjige, "Id", "Id", ocena.KnjigaId);
-            ViewData["UporabnikId"] = new SelectList(_context.Users, "Id", "Id", ocena.UporabnikId);
+            
             return View(ocena);
         }
 
         // GET: Ocene/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,10 +113,16 @@ namespace KnijgoMenjava.Controllers
                 return NotFound();
             }
             ViewData["KnjigaId"] = new SelectList(_context.Knjige, "Id", "Id", ocena.KnjigaId);
-            ViewData["UporabnikId"] = new SelectList(_context.Users, "Id", "Id", ocena.UporabnikId);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (ocena.UporabnikId != userId && !User.IsInRole("Administrator"))
+            {
+                return Forbid();
+            }
             return View(ocena);
         }
 
+        [Authorize]
         // POST: Ocene/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -128,6 +161,7 @@ namespace KnijgoMenjava.Controllers
         }
 
         // GET: Ocene/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -142,6 +176,12 @@ namespace KnijgoMenjava.Controllers
             if (ocena == null)
             {
                 return NotFound();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (ocena.UporabnikId != userId && !User.IsInRole("Administrator"))
+            {
+                return Forbid();
             }
 
             return View(ocena);

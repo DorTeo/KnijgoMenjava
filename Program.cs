@@ -12,11 +12,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("AppContext")));
 
 
-builder.Services
-    .AddDefaultIdentity<Uporabnik>(options => 
-    {
-        options.SignIn.RequireConfirmedAccount = false;
-    })
+builder.Services.AddDefaultIdentity<Uporabnik>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddControllersWithViews();

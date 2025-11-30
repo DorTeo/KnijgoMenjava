@@ -11,6 +11,8 @@ using System.Security.Claims;
 namespace KnijgoMenjava.Controllers
 {
 
+    [Authorize(Roles = "Administrator")]
+
     public class KategorijeController : Controller
     {
         private readonly AppDbContext _context;
