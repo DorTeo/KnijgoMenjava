@@ -40,7 +40,7 @@ namespace KnijgoMenjava.Controllers
                     break;
             }
             
-            int pageSize = 5;
+            int pageSize = 4;
             return View(await PaginatedList<Ocena>.CreateAsync(appDbContext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 

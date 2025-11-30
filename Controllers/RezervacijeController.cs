@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KnjigoMenjava.Data;
 using KnjigoMenjava.Models;
+using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
 namespace KnijgoMenjava.Controllers
@@ -63,7 +64,7 @@ namespace KnijgoMenjava.Controllers
                     break;
             }
 
-            int pageSize = 10;    
+            int pageSize = 4;    
             return View(await PaginatedList<Rezervacija>.CreateAsync(AppDBcontext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
@@ -114,6 +115,7 @@ namespace KnijgoMenjava.Controllers
         }
 
         // GET: Rezervacije/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -143,7 +145,7 @@ namespace KnijgoMenjava.Controllers
                 return NotFound();
             }
 
-            // Remove validation for navigation properties that are not bound
+            
             ModelState.Remove("Knjiga");
             ModelState.Remove("Uporabnik");
 
@@ -189,6 +191,11 @@ namespace KnijgoMenjava.Controllers
                 return NotFound();
             }
 
+            if (rezervacija.UporabnikId != User.FindFirstValue(ClaimTypes.NameIdentifier) && rezervacija.Knjiga.LastnikId != User.FindFirstValue(ClaimTypes.NameIdentifier) && !User.IsInRole("Administrator"))
+            {
+                return Forbid();
+            }
+
             return View(rezervacija);
         }
 
@@ -210,6 +217,34 @@ namespace KnijgoMenjava.Controllers
         private bool RezervacijaExists(int id)
         {
             return _context.Rezervacije.Any(e => e.Id == id);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PotrdiVrnjeno(int id)
+        {
+            var rezervacija = await _context.Rezervacije
+                .Include(r => r.Knjiga)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (rezervacija == null)
+            {
+                return NotFound();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!string.IsNullOrEmpty(userId) && rezervacija.Knjiga.LastnikId != userId && !User.IsInRole("Administrator")) return Forbid();
+
+            if (rezervacija.DatumVrnitve == null)
+            {
+                rezervacija.DatumVrnitve = DateTime.Now;
+                _context.Update(rezervacija);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

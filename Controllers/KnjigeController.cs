@@ -64,7 +64,7 @@ namespace KnijgoMenjava.Controllers
                     break;
             }
 
-            int pageSize = 10;    
+            int pageSize = 4;    
             return View(await PaginatedList<Knjiga>.CreateAsync(appDbContext.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NJ+m8f1AHqk=",
+  "dgSpecHash": "9E+ZRloiE2g=",
   "success": true,
-  "projectFilePath": "C:\\Users\\teoto\\Desktop\\sola\\2.letnik\\IS\\Seminarksa\\KnijgoMenjava\\KnijgoMenjava.csproj",
+  "projectFilePath": "D:\\KnijgoMenjava\\KnijgoMenjava\\KnijgoMenjava.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\teoto\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\teoto\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
@@ -153,9 +153,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'Microsoft.Build' 17.11.4 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3q9-fxm7-j8fq",
-      "projectPath": "C:\\Users\\teoto\\Desktop\\sola\\2.letnik\\IS\\Seminarksa\\KnijgoMenjava\\KnijgoMenjava.csproj",
+      "projectPath": "D:\\KnijgoMenjava\\KnijgoMenjava\\KnijgoMenjava.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\teoto\\Desktop\\sola\\2.letnik\\IS\\Seminarksa\\KnijgoMenjava\\KnijgoMenjava.csproj",
+      "filePath": "D:\\KnijgoMenjava\\KnijgoMenjava\\KnijgoMenjava.csproj",
       "libraryId": "Microsoft.Build",
       "targetGraphs": [
         "net10.0"

@@ -4,6 +4,8 @@
     ViewData["Title"] = "Seznam knjig";
 }
 
+@using System.Security.Claims
+
 <h1>Seznam knjig</h1>
 
 <p>
@@ -69,9 +71,12 @@
                 <form asp-action="Rezerviraj" asp-route-id="@item.Id" method="post" style="display:inline;">
                     <button type="submit" class="btn btn-primary btn-sm">Rezerviraj</button>
                 </form> |
-                <a asp-action="Edit" asp-route-id="@item.Id">Uredi</a> |
                 <a asp-controller="Ocene" asp-action="Index" asp-route-knjigaId="@item.Id">Ocene</a> |
+                @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == item.LastnikId || User.IsInRole("Administrator"))
+                {
+                <a asp-action="Edit" asp-route-id="@item.Id">Uredi</a> 
                 <a asp-action="Delete" asp-route-id="@item.Id">Izbrisi</a>
+                }
             </td>
         </tr>
 }

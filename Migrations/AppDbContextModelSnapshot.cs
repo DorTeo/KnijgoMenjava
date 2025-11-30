@@ -115,16 +115,13 @@ namespace KnijgoMenjava.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ArhiviranNaslov")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("DatumRezervacije")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DatumVrnitve")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("KnjigaId")
+                    b.Property<int>("KnjigaId")
                         .HasColumnType("int");
 
                     b.Property<string>("UporabnikId")
@@ -393,7 +390,9 @@ namespace KnijgoMenjava.Migrations
                 {
                     b.HasOne("KnjigoMenjava.Models.Knjiga", "Knjiga")
                         .WithMany()
-                        .HasForeignKey("KnjigaId");
+                        .HasForeignKey("KnjigaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("KnjigoMenjava.Models.Uporabnik", "Uporabnik")
                         .WithMany()
