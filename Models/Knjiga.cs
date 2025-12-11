@@ -5,10 +5,14 @@ public class Knjiga
 {
     public int Id { get; set; }
 
+    [Required]
     public string Naslov { get; set; }
+    [Required]
     public string Avtor { get; set; }
     public string? Opis { get; set; }
 
+    [Display(Name = "Datum dodajanja")]
+    [Required]
     public DateTime DatumDodajanja { get; set; }
 
 

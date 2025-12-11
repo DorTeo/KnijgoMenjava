@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("AppContext")));
+        builder.Configuration.GetConnectionString("AzureContext")));
 
 
 builder.Services.AddDefaultIdentity<Uporabnik>(options => options.SignIn.RequireConfirmedAccount = false)
