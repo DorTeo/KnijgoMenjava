@@ -1,0 +1,17 @@
+# Build output
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Visual Studio / tooling
+.vs/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.userprefs
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
