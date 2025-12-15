@@ -933,3 +933,7 @@ D:\KnijgoMenjava\KnijgoMenjava\obj\Debug\net10.0\refint\KnijgoMenjava.dll
 D:\KnijgoMenjava\KnijgoMenjava\obj\Debug\net10.0\KnijgoMenjava.pdb
 D:\KnijgoMenjava\KnijgoMenjava\obj\Debug\net10.0\KnijgoMenjava.genruntimeconfig.cache
 D:\KnijgoMenjava\KnijgoMenjava\obj\Debug\net10.0\ref\KnijgoMenjava.dll
+d:\KnijgoMenjava\KnijgoMenjava\bin\Debug\net10.0\Microsoft.OpenApi.dll
+d:\KnijgoMenjava\KnijgoMenjava\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
+d:\KnijgoMenjava\KnijgoMenjava\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+d:\KnijgoMenjava\KnijgoMenjava\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
