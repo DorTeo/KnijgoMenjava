@@ -7,11 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KnjigoMenjava.Data;
 using KnjigoMenjava.Models;
+using Filters;
+
 
 namespace KnijgoMenjava.Controllers_Api
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKeyAuth]
     public class RezervacijaApiController : ControllerBase
     {
         private readonly AppDbContext _context;

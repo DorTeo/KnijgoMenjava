@@ -7,11 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KnjigoMenjava.Data;
 using KnjigoMenjava.Models;
+using Filters;
+
 
 namespace KnijgoMenjava.Controllers_Api
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKeyAuth]
     public class KnjigaApiController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -45,6 +48,7 @@ namespace KnijgoMenjava.Controllers_Api
         // PUT: api/KnjigaApi/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ApiKeyAuth]
         public async Task<IActionResult> PutKnjiga(int id, Knjiga knjiga)
         {
             if (id != knjiga.Id)
