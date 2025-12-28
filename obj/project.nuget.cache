@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dra942CgYt4=",
+  "dgSpecHash": "ZhcAwRGkm54=",
   "success": true,
-  "projectFilePath": "D:\\KnijgoMenjava\\KnijgoMenjava\\KnijgoMenjava.csproj",
+  "projectFilePath": "C:\\Users\\teoto\\Desktop\\sola\\2.letnik\\IS\\Seminarksa\\KnijgoMenjava\\KnijgoMenjava.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\teoto\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\teoto\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
@@ -130,10 +130,10 @@
     "C:\\Users\\teoto\\.nuget\\packages\\nuget.projectmodel\\6.12.1\\nuget.projectmodel.6.12.1.nupkg.sha512",
     "C:\\Users\\teoto\\.nuget\\packages\\nuget.protocol\\6.12.1\\nuget.protocol.6.12.1.nupkg.sha512",
     "C:\\Users\\teoto\\.nuget\\packages\\nuget.versioning\\6.12.1\\nuget.versioning.6.12.1.nupkg.sha512",
-    "C:\\Users\\teoto\\.nuget\\packages\\swashbuckle.aspnetcore\\10.0.1\\swashbuckle.aspnetcore.10.0.1.nupkg.sha512",
-    "C:\\Users\\teoto\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\10.0.1\\swashbuckle.aspnetcore.swagger.10.0.1.nupkg.sha512",
-    "C:\\Users\\teoto\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\10.0.1\\swashbuckle.aspnetcore.swaggergen.10.0.1.nupkg.sha512",
-    "C:\\Users\\teoto\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\10.0.1\\swashbuckle.aspnetcore.swaggerui.10.0.1.nupkg.sha512",
+    "C:\\Users\\teoto\\.nuget\\packages\\swashbuckle.aspnetcore\\10.1.0\\swashbuckle.aspnetcore.10.1.0.nupkg.sha512",
+    "C:\\Users\\teoto\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\10.1.0\\swashbuckle.aspnetcore.swagger.10.1.0.nupkg.sha512",
+    "C:\\Users\\teoto\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\10.1.0\\swashbuckle.aspnetcore.swaggergen.10.1.0.nupkg.sha512",
+    "C:\\Users\\teoto\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\10.1.0\\swashbuckle.aspnetcore.swaggerui.10.1.0.nupkg.sha512",
     "C:\\Users\\teoto\\.nuget\\packages\\system.clientmodel\\1.5.1\\system.clientmodel.1.5.1.nupkg.sha512",
     "C:\\Users\\teoto\\.nuget\\packages\\system.codedom\\9.0.0\\system.codedom.9.0.0.nupkg.sha512",
     "C:\\Users\\teoto\\.nuget\\packages\\system.composition\\9.0.0\\system.composition.9.0.0.nupkg.sha512",
@@ -159,9 +159,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'Microsoft.Build' 17.11.4 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3q9-fxm7-j8fq",
-      "projectPath": "D:\\KnijgoMenjava\\KnijgoMenjava\\KnijgoMenjava.csproj",
+      "projectPath": "C:\\Users\\teoto\\Desktop\\sola\\2.letnik\\IS\\Seminarksa\\KnijgoMenjava\\KnijgoMenjava.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\KnijgoMenjava\\KnijgoMenjava\\KnijgoMenjava.csproj",
+      "filePath": "C:\\Users\\teoto\\Desktop\\sola\\2.letnik\\IS\\Seminarksa\\KnijgoMenjava\\KnijgoMenjava.csproj",
       "libraryId": "Microsoft.Build",
       "targetGraphs": [
         "net10.0"

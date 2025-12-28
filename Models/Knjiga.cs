@@ -12,6 +12,7 @@ public class Knjiga
     public string? Opis { get; set; }
 
     [Display(Name = "Datum dodajanja")]
+    [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm}", ApplyFormatInEditMode = true)]
     [Required]
     public DateTime DatumDodajanja { get; set; }
 

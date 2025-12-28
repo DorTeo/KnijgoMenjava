@@ -28,14 +28,14 @@ namespace KnijgoMenjava.Controllers_Api
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Knjiga>>> GetKnjige()
         {
-            return await _context.Knjige.ToListAsync();
+            return await _context.Knjige.Include(k => k.Kategorija).Include(k => k.Lastnik).ToListAsync();
         }
 
         // GET: api/KnjigaApi/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Knjiga>> GetKnjiga(int id)
         {
-            var knjiga = await _context.Knjige.FindAsync(id);
+            var knjiga = await _context.Knjige.Include(k => k.Kategorija).Include(k => k.Lastnik).FirstOrDefaultAsync(x => x.Id == id);
 
             if (knjiga == null)
             {
