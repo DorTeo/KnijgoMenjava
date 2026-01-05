@@ -2,13 +2,28 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using KnijgoMenjava.Models;
 
+using KnjigoMenjava.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace KnijgoMenjava.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly AppDbContext _context;
+
+    public HomeController(AppDbContext context)
     {
-        return View();
+        _context = context;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var zadnjeKnjige = await _context.Knjige
+            .Include(k => k.Kategorija)
+            .OrderByDescending(k => k.DatumDodajanja)
+            .Take(3)
+            .ToListAsync();
+        return View(zadnjeKnjige);
     }
 
     public IActionResult Privacy()
