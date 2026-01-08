@@ -5,10 +5,16 @@ public class Rezervacija
 {
     public int Id { get; set; }
 
-    [Required]
+    
     [Display(Name = "Datum rezervacije")]
+    [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm}", ApplyFormatInEditMode = true)]
+    [Required]
     public DateTime DatumRezervacije { get; set; }
+
+    
     [Display(Name = "Datum vrnitve")]
+    [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm}", ApplyFormatInEditMode = true)]
+    [Required]
     public DateTime? DatumVrnitve { get; set; }
 
     [Required]
