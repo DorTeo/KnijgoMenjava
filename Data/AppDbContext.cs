@@ -33,5 +33,19 @@ public class AppDbContext : IdentityDbContext<Uporabnik>
             relationship.DeleteBehavior = DeleteBehavior.Restrict;
         }
 
+        modelBuilder.Entity<Ocena>()
+            .HasOne(o => o.Knjiga)
+            .WithMany()
+            .HasForeignKey(o => o.KnjigaId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Rezervacija>()
+            .HasOne(r => r.Knjiga)
+            .WithMany()
+            .HasForeignKey(r => r.KnjigaId)
+            .OnDelete(DeleteBehavior.Cascade);
+
     }
+
+
 }

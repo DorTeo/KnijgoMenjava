@@ -28,6 +28,7 @@ namespace KnijgoMenjava.Controllers
             if (knjigaId != null)
             {
                 appDbContext = appDbContext.Where(o => o.KnjigaId == knjigaId);
+                ViewData["Title"] = "Ocene knjige " + (await _context.Knjige.FindAsync(knjigaId))?.Naslov;
             }
 
             switch (sortOrder)

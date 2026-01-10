@@ -2,10 +2,9 @@
 @model PaginatedList<KnjigoMenjava.Models.Ocena>
 
 @{
-    ViewData["Title"] = "Ocene Knjige";
 }
 
-<h1>Ocene</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create" asp-route-knjigaId="@Context.Request.Query["knjigaId"]">Dodaj novo oceno</a>
