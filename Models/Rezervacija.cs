@@ -14,7 +14,6 @@ public class Rezervacija
     
     [Display(Name = "Datum vrnitve")]
     [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm}", ApplyFormatInEditMode = true)]
-    [Required]
     public DateTime? DatumVrnitve { get; set; }
 
     [Required]

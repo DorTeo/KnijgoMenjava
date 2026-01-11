@@ -64,12 +64,12 @@
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-knjigaId="@Context.Request.Query["knjigaId"]"
    class="btn btn-default @prevDisabled">
-    Previous
+    Nazaj
 </a>
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-knjigaId="@Context.Request.Query["knjigaId"]"
    class="btn btn-default @nextDisabled">
-    Next
+    Naprej
 </a>

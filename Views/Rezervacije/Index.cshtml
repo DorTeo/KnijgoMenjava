@@ -12,7 +12,7 @@
     <div class="form-actions no-color">
         <p>
             <label>Isči: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" /></label>
-            <input type="submit" value="POIŠČI" class="btn btn-default" />
+            <input type="submit" value="POIŠČI" class="btn btn-secondary" />
             <a asp-action="Index">Nazaj na seznam</a>
         </p>
     </div>
@@ -58,8 +58,8 @@
                 @Html.DisplayFor(modelItem => item.Uporabnik.UserName)
             </td>
             <td>
+                <a asp-controller="Ocene" asp-action="Index" asp-route-knjigaId="@item.Id">Ocene</a>
                 <a asp-action="Details" asp-route-id="@item.Id">Podrobnosti</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Izbriši</a>
                 @{
                     var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 }
@@ -89,12 +89,12 @@
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-default @prevDisabled">
-    Previous
+    Nazaj
 </a>
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-default @nextDisabled">
-    Next
+    Naprej
 </a>
