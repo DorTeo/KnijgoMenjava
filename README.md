@@ -22,4 +22,5 @@ Uporabnik mora biti za objavo in izposojo knjig prijavljen. Na začetnem zaslonu
 Uporabnik lahko tudi v zavihku Knjige vidi ocene in komentarje posamezne knjige npr. da vidi, da je knjige dobro ohranjena.
 
 Diagram podatkovnega modela je izdelan v orodju PowerDesigner.
-![alt text](image-4.png)
+<img width="1238" height="862" alt="Screenshot 2026-01-08 115601" src="https://github.com/user-attachments/assets/117bf645-444e-4f91-8023-0c5030af02e1" />
+
