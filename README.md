@@ -1,6 +1,8 @@
 63240328 Teodor Todorović
 
 KnjigoMenjava
+*aplikacija trenutno ni zagnana (ustavljena na storitvi azure), sicer je dostopna na naslovu
+knjigomenjava.azurewebsites.net
 
 ![alt text](image-6.png)
 
